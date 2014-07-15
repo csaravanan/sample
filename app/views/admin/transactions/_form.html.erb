@@ -1,0 +1,40 @@
+<%= active_admin_form_for [:admin,@transaction] do |f|%>
+<%= fields_for(:credit_card, @credit_card) do |cc| %>
+  <p>
+   <label>First Name</label><br />
+    <%= cc.text_field :first_name %>
+  </p>
+  <p>
+    <label>Last Name</label><br />
+    <%= cc.text_field :last_name %>
+  </p>
+  <p>
+   <label>Card Type</label><br />
+    <%= cc.select :brand, [["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]] %>
+  </p>
+  <p>
+   <label>Card Number</label><br />
+    <%= cc.text_field :number %>
+  </p>
+  <p>
+   <label>Card Verification Value (CVV)</label><br />
+    <%= cc.text_field :verification_value %>
+  </p>
+  <p>
+    <label>Card Expires On</label><br />
+  <%= cc.select :month, (1..12) %>
+  <%= cc.select :year, (Time.now.year .. 10.years.from_now.year) %>
+  </p>
+  <% end %>
+  <fieldset class="actions">
+        <ol>
+          <%submit_val = "Upgrade"%>
+          <li id="transaction_submit_action" class="action input_action ">
+            <input type="submit" value= <%= submit_val%> name="commit">
+          </li>
+          <li class="cancel">
+            <a href="/admin/transactions">Cancel</a>
+          </li>
+        </ol>
+      </fieldset>
+<%end%>

@@ -1,0 +1,130 @@
+<div class="page-wrap">
+      <div class="header">
+        <div class="container"> 
+          <!-- Fixed navbar -->
+          <div class="navbar navbar-inverse " role="navigation">
+            <div class="container">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                <a class="navbar-brand" href="#"><%= params[:company]%></a> </div>
+             
+              <div class="login-wrap"> <a href="/users/sign_in">Sign In</a> <a href="/plans/new">Sign Up</a> 
+               
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+<%if @credit_card.present? && @credit_card.errors.present? %>
+<div class="container">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+           <div id="error_explanation">
+            <h2> Error Messages </h2>
+            <ul>
+              <% @credit_card.errors.full_messages.each do |message|%>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+           </div>
+        </div>
+      </div>
+    </div>
+</div>
+<%end%>
+<div class="clearfix"></div>
+	<div class="content">
+	<div class="container"> 
+		<!-- Nav tabs -->
+		<div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="card-wrap clearfix">
+				<h3>Great, lets get the payment done!</h3>
+					<div class="card-con">
+					<%= form_for @transaction , :html => {:class => "form-horizontal", :role =>"form" } do |f|%>
+					<%if @trans_param.present? %>
+					<%params[:subscription]= @trans_param[:transaction][:subscription] %>
+					<%params[:company]= @trans_param[:transaction][:company_domain] %>
+					<%end%>
+					<%= f.hidden_field "company_domain",:value=>params[:company]%>
+					<%= f.hidden_field "subscription",:value=>params[:subscription]%>
+					<%= fields_for(:credit_card, @credit_card) do |cc| %>
+						<div class="form-group form-group-lg">
+							<label class="col-sm-12 control-label" for="formGroupInputLarge">First Name</label>
+							<div class="col-sm-12">
+								<%= cc.text_field :first_name , :class =>"form-control", :id => "formGroupInputLarge", :placeholder =>"Enter your first name"%>
+							</div>
+						</div>
+						<div class="form-group form-group-lg">
+							<label class="col-sm-12 control-label" for="formGroupInputLarge">Last Name</label>
+							<div class="col-sm-12">
+								<%= cc.text_field :last_name , :class => "form-control", :id => "formGroupInputLarge", :placeholder => "Enter your last name"%>
+							</div>
+						</div>
+						<div class="card-num">
+							 <div class="form-group form-group-lg">
+							<label class="col-sm-12 control-label" for="formGroupInputLarge">Card Type</label>
+							<div class="col-sm-12">
+								<%= cc.select :brand, [["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]] , {},{:class => "form-control"}%>
+							</div>
+						</div>
+						</div>
+						<div class="card-type">
+							<div class="form-group form-group-lg">
+								<label class="col-sm-12 control-label" for="exampleInputFile">Card Number</label>
+							 <div class="col-sm-12">
+								<%= cc.text_field :number , :class => "form-control", :id => "formGroupInputLarge", :placeholder =>"Card number"%>
+								</div>
+							</div>
+							</div>
+							
+							<div class="card-cvv">
+							 <div class="form-group form-group-lg">
+								<label class="col-sm-12 control-label" for="exampleInputFile">Card Verification Value</label>
+							<div class="col-sm-8">
+								<%= cc.text_field :verification_value , :class =>"form-control", :id =>"formGroupInputLarge", :placeholder =>"CVV"%>
+							</div>
+							</div>
+						 </div>
+						 
+						 <div  class="clearfix"></div>
+						 <div class="card-exp">
+							 <div class="form-group form-group-lg">
+							<label class="col-sm-12 control-label" for="formGroupInputLarge">CardExpires on</label>
+							<div class="col-sm-12">
+								<%= cc.select :month, (1..12), {},{:class =>"form-control"}%>
+							</div>
+						</div>
+						</div>
+						<div class="card-year">
+							<div class="form-group form-group-lg">
+								<label class="col-sm-12 control-label" for="exampleInputFile">&nbsp;</label>
+							 <div class="col-sm-12">
+								<%= cc.select :year, (Time.now.year .. 10.years.from_now.year) , {},{:class =>"form-control"}%>
+								</div>
+							</div>
+							</div>
+							  <% end %>
+							<div class="clearfix"></div>
+								<div class="logn-btn">
+									<!--<a href="#" class="btn btn-warning">Submit</a>
+									 <a href="#" class="btn btn-danger">Cancel</a>
+									-->
+									<%= f.submit "Submit", :class => "btn btn-warning" %>
+								</div>
+								<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="footer_left col-lg-6">2014 © FixNix Audit Management</div>
+			<div class="footer_right col-lg-6">Powered By<img src="/assets/outer/footer_logo.png" alt=""/></div>
+		</div>
+	</div>
+</div>

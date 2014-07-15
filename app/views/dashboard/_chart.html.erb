@@ -1,0 +1,65 @@
+ <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+ <div id="chart_wrap">
+<ul class="col-lg-12  col-sm-6" id="audit_chart">
+<% charts.each do |chart|%>
+			<li class="db_setting_main col-lg-6" id="<%= chart.id%>">
+					<div class="dash_sub_title"><span class="title-dash"><%= chart.name%></span><span class="setting-icon db_setting" id="dropdown_<%= chart.id%>"><% if current_user.role_title == 'company_admin'%><span class="db_setting_down_icon" ></span>
+					<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="#" onclick="chart_destroy(<%= chart.id%>);">Delete</a></li>
+						<script>
+						//~ test();
+						$( "#dropdown_<%= chart.id%>" ).mouseover(function() {
+							$("#setting_dropdown_<%= chart.id%>").show();
+						});
+							$( "#dropdown_<%= chart.id%>" ).mouseleave(function() {
+							$("#setting_dropdown_<%= chart.id%>").hide();
+						});
+						</script>
+						</ul>
+					</div>
+					</span></div>
+				<div id="chart_<%= chart.id%>"></div>
+				<script>
+				<% chart_input = chart_input(chart.x_axis)%>
+				<% pie_chart_input = chart.chart_type == 'Pie' ? pie_input(chart_input[0], chart_input[1]) : 0%>
+				load_chart("<%= chart.chart_type%>", <%= raw chart_input[0]%>, <%= raw chart_input[1]%>,'chart_'+<%= chart.id%>, "<%= raw chart.y_axis%>","<%= raw chart.x_axis%>", <%= raw pie_chart_input%>)
+				</script>
+				<% end %> 
+			</li>
+<% end %>
+		</ul>
+		</div>
+
+<script>
+var serialStr = [];
+$(document).ready(function(){
+$( "#audit_chart" ).sortable({
+ update: function(){
+		serialStr=getItems('#chart_wrap');
+		console.log(serialStr);
+	 $.ajax({
+					url: "/dashboard/update",
+					type: "put",
+					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token',jQuery('meta[name="csrf-token"]').attr("content")); },
+					data: {order: serialStr}
+					});
+  }    
+});
+
+function getItems(container)
+{
+    var columns = [];
+ 
+    $(container+ ' ul#audit_chart').each(function(){
+        columns.push($(this).sortable('toArray'));
+    });
+ 
+    return columns.join('|');
+}
+$( "#audit_chart" ).disableSelection();
+});
+</script>

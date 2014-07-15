@@ -1,0 +1,11 @@
+ Your Recurring Payment for the subscription <b><%= current_company.subscriptions.first.name %> </b> occurs every <b> <%= current_company.subscriptions.first.valid_log%> Months(s). </b>
+
+Do you want to cancel the recurring payment ? 
+ <fieldset class="actions">
+        <ol>
+          <li class="cancel">
+          	 <%= link_to "Cancel Recurring Payment", admin_transactions_cancel_recurring_path, :method => :post %>
+            
+          </li>
+        </ol>
+      </fieldset>

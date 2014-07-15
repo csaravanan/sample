@@ -1,0 +1,5 @@
+<% if !@dashboard_chart.errors.present? %>
+$('#db_add_widget').modal('hide')
+new Messi("<%=  MESSAGES["dashboard"]["create"]["success"] %>", {title: 'Success', titleClass: 'success', autoclose: 1500});
+window.location.href = '/'
+<% end %>

@@ -1,0 +1,97 @@
+<%= javascript_include_tag "/assets/views/main_dashboard.js" %>
+<script src="/assets/outer/highcharts.js"></script>
+<script src="/assets/outer/exporting.js"></script>
+<script src="/assets/outer/drilldown.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="/assets/outer/jquery.dragsort-0.5.1.min.js"></script>
+<script type="text/javascript" src="/assets/outer/jquery.migrate-1.2.1.js"></script>
+
+<!-- Dash Board Start -->
+  <div class="dashboard_main">
+    <div class="container">
+      <div class="row"> 
+        <!-- Dash Board Title Start -->
+        <div class="dashboard-title col-lg-10">Dash Board</div>
+        <div class="dashboard-title col-lg-2">
+          <div class="form-group clearfix"><% if current_user.role_title == 'company_admin'%> <a class="add_widget_btn fright" data-toggle="modal" href="#db_add_widget">Add Widget</a><% end %>
+            <div id="db_add_widget" class="modal fade">
+              <div class="modal-dialog modal-dialog_large modal-dialog_addwidget">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &nbsp; </button>
+                    <!--popup content Start-->
+                    <div class="model-header">
+                      <div class="modal-title">Add Widget</div>
+                    </div>
+										<%= form_for(@dashboard_chart, :url => { :action => "create" },:remote => true) do |f| %>
+                    <div class="model-con">
+                      <div class="form-group clearfix">
+                        <%= f.label "Widget Name: " %>
+                        <div class="clearfix"></div>
+													<%= f.text_field :name , :class => "modal-normal-input" ,:id => "widget_name"%>
+													<span id="widget_name_error" class="error_message" style="display:none;"><%= MESSAGES["chart"]["presence"]["name"]%></span>
+                      </div>
+                      <div class="form-group fleft modal-padding">
+                         <%= f.label "X-Axis: ", :class => "control-label" %>
+                        <div class="select_outer">
+													<%= f.select :x_axis , ['Type','Status','Compliance Type','Standard','Topic','Location','Department','Team'],{:prompt => "-Select X-Axis-", :id =>"widget_x_axis"}  %>
+                        </div>
+											<span id="widget_x_axis_error" class="error_message" style="display:none;"><%= MESSAGES["chart"]["presence"]["x_axis"]%></span>
+                      </div>
+                      <div class="form-group fleft">
+                         <%= f.label "Y-Axis: ", :class => "control-label" %>
+                        <div class="select_outer">
+													<%= f.select :y_axis , ['Count','Percentage'], {:prompt => "-Select Y-Axis-", :id =>"widget_y_axis" } %>
+                        </div>
+												<span id="widget_y_axis_error" class="error_message" style="display:none;"><%= MESSAGES["chart"]["presence"]["y_axis"]%></span>
+                      </div>
+											<div class="form-group clearfix">
+                        <%= f.label "Chart Type: " %>
+													<div class="select_outer">
+													<%= f.select :chart_type , ['Bar','Pie','Line'],{ :prompt => "-Select Chart Type-" , :class =>"modal-normal-input", :id => "widget_chart_type" }%>
+												</div>
+												<span id="widget_chart_type_error" class="error_message" style="display:none;"><%= MESSAGES["chart"]["presence"]["chart_type"]%></span>
+                      </div>
+                      <div class="clearfix"></div>
+											<%= f.hidden_field :company_id, :value =>"#{current_company.id}"%>
+                      <div class="modal-footer"><%= f.submit "Submit", :class => "orange_btn" , :onclick => "widget_validation();"%> <a href="#" class="black_btn" onclick="$('#db_add_widget').modal('hide');">Cancel</a> </div>
+										<% end %>
+                    </div>
+                    <!--popup content End--> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Dash Board Title End --> 
+        
+        <!--Dash Board Start -->
+	<input type="hidden" id="sortOrder" name="sortOrder"  />
+		<div id="charts"><%= render "chart",charts: @charts %></div>
+	               
+      </div>
+    </div>
+  </div>
+  <!-- Dash Board End -->
+  <script type="text/javascript">
+  
+$(document).ready(function(){
+ 
+  Top_postion = $(window).scrollTop();
+  
+  $( ".user_login" ).mouseenter(function() {
+    $(this).addClass("active");
+    $(".account_header_dropdown").slideDown(100);   
+  })
+  .mouseleave(function() {
+    $(this).removeClass("active");
+    $(".account_header_dropdown").hide();
+  });
+  
+});
+
+
+
+
+</script>
